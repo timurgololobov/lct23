@@ -1,0 +1,49 @@
+server {
+#    listen 443 ssl;
+    listen 80;
+    server_name  engineeringtomorrow.ru/;
+#    ssl_certificate /etc/ssl/heatexchange.crt;
+#    ssl_certificate_key /etc/ssl/heatexchange.key;
+#    ssl_session_cache shared:SSL:10m;
+#    ssl_session_timeout 10m;
+#    keepalive_timeout 70;
+
+    client_max_body_size 100M;
+    proxy_force_ranges on;
+    max_ranges 100;
+    add_header Accept-Ranges bytes;
+
+    location / {
+      proxy_pass http://client:3000;
+    }
+
+   location /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        root /var/www/html/.well-known/acme-challenge/;
+    }
+
+    location /probation/ {
+      proxy_ignore_client_abort on;
+      proxy_pass http://back:8000;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+      proxy_redirect off;
+    }
+
+    location /api/ {
+      proxy_ignore_client_abort on;
+      proxy_pass http://node:8080;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+      proxy_redirect off;
+    }
+
+}
+
+#server {
+#    listen 80;
+#    server_name  ${NGINX_HOST_THREE};
+#    location / {
+#      proxy_pass http://linas:3002;
+#    }
+#}

@@ -1,0 +1,64 @@
+version: '3.3'
+
+services:
+  client:
+    build:
+      dockerfile: Dockerfile.prod
+      context: ./client
+    container_name: docker-client
+    restart: unless-stopped
+    command: serve -s build -l 3000
+    networks:
+      - docker-network
+
+  nginx:
+    image: nginx:1.19.8-alpine
+    container_name: docker-nginx
+    restart: on-failure
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/nginx.conf.prod:/etc/nginx/templates/default.conf.template
+      - ./ssl:/etc/ssl/
+      - ./htmlssl:/var/www/html/.well-known/acme-challenge
+      - media_volume:/home/app/web/media
+    env_file:
+      - ./.env
+    depends_on:
+      - client
+    networks:
+      - docker-network
+
+  back:
+    build:
+      dockerfile: Dockerfile.prod
+      context: ./back
+    container_name: docker-back
+    restart: unless-stopped
+    command: >
+      sh -c "uvicorn main:app --proxy-headers --host 0.0.0.0 --port 8000"
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    networks:
+      - docker-network
+
+  node:
+    build:
+      dockerfile: Dockerfile.prod
+      context: ./node
+    container_name: docker-node
+    restart: unless-stopped
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    networks:
+      - docker-network
+
+volumes:
+  media_volume:
+
+networks:
+  docker-network:
+    driver: bridge
