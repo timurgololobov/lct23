@@ -2,33 +2,26 @@ from enum import Enum
 from datetime import datetime
 
 class Major(str, Enum): 
-    CS='Computer Science'
-    IT='Information Technology'
-    Math='Mathematics'
-    Chem='Chemistry'
-    Agri='Agriculture'
-    AgChem='Agricultural Chemistry'
-    Phy='Physics'
-    Stat='Statistics'
-    CommArts='Communication Arts'
-    FArts='Fine Arts'
-    Archi='Architecture'
-    Kinetics='Human Kinetics'
-    Physio='Physiology'
-    Psych='Psychology'
-    Hist='History'
-    Archeo='Archeology'
-    ChemEng='Chemical Engineering'
-    EEng='Electrical Engineering'
-    BioChem='BioChemistry'
-    MathEduc='Math Education'
+    Math='Математика'
+    Chem='Химия'
+    EEng='Электроснабжение'
+    Draver='Водитель'
+    Phy='Ученный'
+    ChemEng='Инженер'
+    Stat='Аналитик'
+    CommArts='Дизайнер'
+    Archi='Архитектор'
+    CS='Специалист по компьютерным наукам'
+    IT='Информационные науки'
+    Physio='Философ'
+    Psych='Психолог'
+    Hist='Историк'
+    Archeo='Археолог'
     
 
 class ProbationerStatus(str, Enum): 
     Freeman='Freeman'
-    Sophomore='Sophomore'
-    Junior='Junior'
-    Senior='Senior'
+    Sophomore='Стажер'
 
 class Probationer: 
     def __init__(self, stud_id:int, fname:str, lname:str, mname:str, age:int, major:Major, department:str, status:ProbationerStatus ): 
